@@ -3,10 +3,11 @@ const emailRegex: RegExp =
   /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
 //options type for schema type
 type OptionsType = {
+  [key: string]: boolean | RegExp | string | number;
   required: boolean;
   min: number;
   max: number;
-  matches: RegExp | null;
+  matches: RegExp | string;
   string: boolean;
   number: boolean;
   boolean: boolean;
@@ -17,19 +18,19 @@ type OptionsType = {
 //main class
 class SchemaBuilder {
   //initialization as private to ensure no outside access
-  private schema: Record<string, OptionsType> | null = null;
   //initialization default_type in order to allow easy reset later
   private readonly default_type: OptionsType = {
     required: true,
     min: -1,
     max: -1,
-    matches: null,
+    matches: "",
     string: false,
     number: false,
     boolean: false,
     date: false,
     email: false,
   };
+  private schema: Record<string, OptionsType> | undefined = undefined;
   //setting options
   private readonly options: OptionsType = this.default_type;
   //main builder function
@@ -125,6 +126,14 @@ class SchemaBuilder {
         throw new Error(
           "Type Assignment Error: Can Only Assign One Data Type Constraint."
         );
+      }
+    }
+    //last thing, creating the final schema with all of the missing pieces that mightve been omitted
+    for (const option in this.options) {
+      for (const property in user_input) {
+        if (!user_input[property].hasOwnProperty(option)) {
+          user_input[property] = {...user_input[property], [option]: this.options[option]};
+        }
       }
     }
     this.schema = user_input;
