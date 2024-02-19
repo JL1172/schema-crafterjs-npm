@@ -4,7 +4,7 @@ const schema = new SchemaBuidler();
 
 schema.build({
   fullName: { string: true, required: true },
-  email: { string: true, required: true },
+  email: { email: true },
   username: {
     string: true,
     required: true,
@@ -12,10 +12,9 @@ schema.build({
     max: 20,
   },
   password: {
-    string: true,
+    password: true,
     required: true,
     min: 8,
-    matches: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
   },
   age: {
     number: true,
@@ -25,6 +24,6 @@ schema.build({
   },
 });
 
-schema.validate({fullName: 'jacob lang', email: 'jacoblang127@gmail.com', username: 'jacoblang11', password: 'helloworld', age: 17,});
+schema.validate({fullName: 'jacob lang', email: 'jacoblang127@gmail.com', username: 'jacoblang11', password: 'helloWorld11', age: 18,});
 // const schema_peeked = schema.peek();
 // console.log(schema_peeked);
