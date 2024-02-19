@@ -25,5 +25,6 @@ schema.build({
   },
 });
 
-const schema_peeked = schema.peek();
-console.log(schema_peeked);
+schema.validate({fullName: 'jacob lang', email: 'jacoblang127@gmail.com', username: 'jacoblang11', password: 'helloworld', age: 17,});
+// const schema_peeked = schema.peek();
+// console.log(schema_peeked);
