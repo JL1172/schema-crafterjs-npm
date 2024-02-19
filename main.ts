@@ -3,9 +3,27 @@ const SchemaBuidler = require("./index");
 const schema = new SchemaBuidler();
 
 schema.build({
-    fullName: {string: true, required: true},
-    email: {string: true, required: true, }
-})
+  fullName: { string: true, required: true },
+  email: { string: true, required: true },
+  username: {
+    string: true,
+    required: true,
+    min: 3,
+    max: 20,
+  },
+  password: {
+    string: true,
+    required: true,
+    min: 8,
+    matches: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+  },
+  age: {
+    number: true,
+    required: true,
+    min: 18,
+    max: 120,
+  },
+});
 
 const schema_peeked = schema.peek();
 console.log(schema_peeked);
