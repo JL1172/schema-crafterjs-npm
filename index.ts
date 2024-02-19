@@ -1,3 +1,6 @@
+//email regex
+const emailRegex: RegExp =
+  /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
 //options type for schema type
 type OptionsType = {
   required: boolean;
@@ -8,6 +11,7 @@ type OptionsType = {
   number: boolean;
   boolean: boolean;
   date: boolean;
+  email: boolean;
 };
 
 //main class
@@ -24,6 +28,7 @@ class SchemaBuilder {
     number: false,
     boolean: false,
     date: false,
+    email: false,
   };
   //setting options
   private readonly options: OptionsType = this.default_type;
@@ -40,61 +45,61 @@ class SchemaBuilder {
       //now switch statement for type checking
       for (const option in user_input[input]) {
         switch (option) {
+          case "email":
+            if (typeof user_input[input][option] !== "boolean") {
+              throw new TypeError(
+                `Incorrect Type For '${option}', Must Be Boolean.`
+              );
+            }
+            break;
           case "string":
             if (typeof user_input[input][option] !== "boolean") {
               throw new TypeError(
-                `Incorrect Type For ${option}, Must Be Boolean.`
+                `Incorrect Type For '${option}', Must Be Boolean.`
               );
             }
-            console.log(user_input[input][option]);
             break;
           case "required":
             if (typeof user_input[input][option] !== "boolean") {
               throw new TypeError(
-                `Incorrect Type For ${option}, Must Be Boolean.`
+                `Incorrect Type For '${option}', Must Be Boolean.`
               );
             }
-            console.log(user_input[input][option]);
             break;
           case "number":
             if (typeof user_input[input][option] !== "boolean") {
               throw new TypeError(
-                `Incorrect Type For ${option}, Must Be Boolean.`
+                `Incorrect Type For '${option}', Must Be Boolean.`
               );
             }
-            console.log(user_input[input][option]);
             break;
           case "date":
             if (typeof user_input[input][option] !== "boolean") {
               throw new TypeError(
-                `Incorrect Type For ${option}, Must Be Boolean.`
+                `Incorrect Type For '${option}', Must Be Boolean.`
               );
             }
-            console.log(user_input[input][option]);
             break;
           case "boolean":
             if (typeof user_input[input][option] !== "boolean") {
               throw new TypeError(
-                `Incorrect Type For ${option}, Must Be Boolean.`
+                `Incorrect Type For '${option}', Must Be Boolean.`
               );
             }
-            console.log(user_input[input][option]);
             break;
           case "min":
             if (typeof user_input[input][option] !== "number") {
               throw new TypeError(
-                `Incorrect Type For ${option}, Must Be Number.`
+                `Incorrect Type For '${option}', Must Be Number.`
               );
             }
-            console.log(user_input[input][option]);
             break;
           case "max":
             if (typeof user_input[input][option] !== "number") {
               throw new TypeError(
-                `Incorrect Type For ${option}, Must Be Number.`
+                `Incorrect Type For '${option}', Must Be Number.`
               );
             }
-            console.log(user_input[input][option]);
             break;
           case "matches":
             if (
@@ -102,21 +107,20 @@ class SchemaBuilder {
               user_input[input][option] instanceof RegExp
             ) {
               throw new TypeError(
-                `Incorrect Type For ${option}, Must Be Regex Instantiated By new RegExp()' Constructor.`
+                `Incorrect Type For '${option}', Must Be Regex Instantiated By new RegExp()' Constructor.`
               );
             }
-            console.log(user_input[input][option]);
             break;
         }
-        console.log("pass one");
       }
 
       //this is grabbing the 4 data types where the input can only be one not one or more
       //then it is returning 0 if more than one data type is checked or 1 if only one is
-      const { number, boolean, date, string } = user_input[input];
+      const { number, boolean, date, string, email } = user_input[input];
       const dataTypesAreUnique: number =
-        [number, boolean, date, string].filter((n) => n).length > 1 ? 0 : 1;
-
+        [number, boolean, date, string, email].filter((n) => n).length > 1
+          ? 0
+          : 1;
       if (dataTypesAreUnique === 0) {
         throw new Error(
           "Type Assignment Error: Can Only Assign One Data Type Constraint."
@@ -131,29 +135,3 @@ class SchemaBuilder {
 }
 
 module.exports = SchemaBuilder;
-
-/*
-import {SchemaBuidler} from strict-schema"
-
-prefaced by "Strict", schema enforcements
-* required
-* min
-* max
-* matches
-* string
-* number
-* array
-* object 
-* boolean
-* date
-
-schema utilities
-* trim
-* uppercase
-* lowercase
-
-schema.build({
-    fullName: {string: true}
-})
-
-*/
