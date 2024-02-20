@@ -360,7 +360,7 @@ class SchemaBuilder {
         }
       }
     }
-    //now i am going to validate the types
+    //now i am going to validate the types z(f(x))
     for (const property in user_input) {
       this.validateSingleType(property, user_input[property]);
     }
