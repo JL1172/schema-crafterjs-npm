@@ -56,4 +56,5 @@ declare class SchemaBuilder {
     validate(user_input: Record<string, string | boolean | number | RegExp | Date>): void;
     peek(): Record<string, FieldOptions | OptionsType>;
 }
+declare module "formulate-schema";
 //# sourceMappingURL=index.d.ts.map
