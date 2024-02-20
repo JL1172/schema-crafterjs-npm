@@ -1,8 +1,3 @@
-//email regex
-const emailRegex: RegExp =
-  /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
-const passwordRegex: RegExp =
-  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 //options type for schema type
 type OptionsType = {
   [key: string]: boolean | RegExp | string | number;
@@ -32,6 +27,12 @@ type ErrorType = {
 };
 //main class
 class SchemaBuilder {
+  //password regex
+  private passwordRegex: RegExp =
+  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+  //email regex
+  private emailRegex: RegExp =
+    /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
   //initialization as private to ensure no outside access
   //initialization default_type in order to allow easy reset later
   private error: ErrorType = {
@@ -259,7 +260,7 @@ class SchemaBuilder {
           break;
         case "email":
           if (ruleSet[rule]) {
-            if (!emailRegex.test(fieldValue)) {
+            if (!this.emailRegex.test(fieldValue)) {
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
@@ -271,7 +272,7 @@ class SchemaBuilder {
           break;
         case "password":
           if (ruleSet[rule]) {
-            if (!passwordRegex.test(fieldValue)) {
+            if (!this.passwordRegex.test(fieldValue)) {
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
@@ -371,5 +372,3 @@ class SchemaBuilder {
     return this.schema;
   }
 }
-
-module.exports = SchemaBuilder;
