@@ -1,6 +1,21 @@
-//options type for schema type
-type OptionsType = {
-  [key: string]: boolean | RegExp | string | number;
+//this interface is for establishing the schema on the schema.build method
+interface FieldOptions {
+  required?: boolean;
+  min?: number;
+  max?: number;
+  matches?: RegExp;
+  string?: boolean;
+  number?: boolean;
+  boolean?: boolean;
+  date?: boolean;
+  email?: boolean;
+  password?: boolean;
+}
+
+//this interface is for the schema when these fields are required to be filled out, a little unecessary, but nice to have just in case
+type FieldType = boolean | number | RegExp | string;
+interface OptionsType {
+  [key: string]: FieldType;
   required: boolean;
   min: number;
   max: number;
@@ -11,8 +26,9 @@ type OptionsType = {
   date: boolean;
   email: boolean;
   password: boolean;
-};
-type ErrorType = {
+}
+//this interface is for the returned error array, this dto makes up all records in the errorStorage array
+interface ErrorType {
   field: string;
   required: string;
   min: string;
@@ -24,17 +40,16 @@ type ErrorType = {
   date: string;
   email: string;
   password: string;
-};
-//main class
-class SchemaBuilder {
+}
+//this is the only class in this package
+export class SchemaBuilder {
   //password regex
   private passwordRegex: RegExp =
-  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   //email regex
   private emailRegex: RegExp =
     /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
-  //initialization as private to ensure no outside access
-  //initialization default_type in order to allow easy reset later
+  //the error type that exists within the errorstorage array as such ErrorType[]
   private error: ErrorType = {
     field: "",
     required: "",
@@ -63,6 +78,7 @@ class SchemaBuilder {
       password: "",
     },
   ];
+  //initialization default_type in order to allow easy reset later
   private readonly default_type: OptionsType = {
     required: true,
     min: -1,
@@ -75,21 +91,23 @@ class SchemaBuilder {
     email: false,
     password: false,
   };
-
-  private schema: Record<string, OptionsType> = { demo: this.default_type };
+  //this is the main schema that is carried along the entire process, there is a place holder that has all default values
+  private schema: Record<string, OptionsType | FieldOptions> = {
+    demo: this.default_type,
+  };
   //setting options
   private readonly options: OptionsType = this.default_type;
   //main builder function
-  public build(user_input: Record<string | symbol, OptionsType>) {
+  public build(user_input: Record<string | symbol, FieldOptions>) {
     for (const input in user_input) {
-      //ensuring no keys in userinput vary from keys in options
+      //ensuring no keys in userinput vary from keys in options, making sure no errors, etc.
       const keys = Object.keys(user_input[input]);
       keys.forEach((n) => {
         if (!(n in this.options)) {
           throw new Error(`Key Not Found In Schema Builder Type: ${n}`);
         }
       });
-      //now switch statement for type checking
+      //now switch statement for type checking, this ensures that the options set, all have correct types they are set to
       for (const option in user_input[input]) {
         switch (option) {
           case "email":
@@ -167,9 +185,7 @@ class SchemaBuilder {
             break;
         }
       }
-
-      //this is grabbing the 4 data types where the input can only be one not one or more
-      //then it is returning 0 if more than one data type is checked or 1 if only one is
+      //this is grabbing the 6 data types where the input can only be one not one or more then it is returning 0 if more than one data type is checked or 1 if only one is
       const { number, boolean, date, string, email, password } =
         user_input[input];
       const dataTypesAreUnique: number =
@@ -183,10 +199,14 @@ class SchemaBuilder {
         );
       }
     }
-    //last thing, creating the final schema with all of the missing pieces that mightve been omitted
+    //last thing, creating the final schema with all of the missing pieces that mightve been omitted, this is for consistency later down the line
+    //first loop loops through the options
     for (const option in this.options) {
+      //second loop loops through the properties in the user input fullName, username, etc.
       for (const property in user_input) {
+        //it is reconciling if userinput[property] (fullName: {string: true}) has all the necessary "meta" configuration, 
         if (!user_input[property].hasOwnProperty(option)) {
+          //if it doesn't it adds the property, by assigning user_input to shallow copy with that option dynamically added to the default value
           user_input[property] = {
             ...user_input[property],
             [option]: this.options[option],
@@ -194,21 +214,32 @@ class SchemaBuilder {
         }
       }
     }
+    //on success the schema object now is assigned to the validated and modified schema that can now be processed
     this.schema = user_input;
   }
+  //these are all util functions
+  //this just packages the error into a nice presentable object and returns it
   private createErrorObject(rule: string, key: string, errorMessage: string) {
     const errorPartOne = { ...this.error, [rule]: errorMessage, field: key };
     return errorPartOne;
   }
+  //this is a setter method that adds the error to the errorStorage object which is inevitably returned to the user at the end of all of this
   private addErrorToList(error: ErrorType) {
     this.errorStorage.push(error);
   }
+  //this validates that the schema has a one to one replica per-se of the keys in the given payload
   private validateSingleKey(key: string) {
     return this.schema.hasOwnProperty(key);
   }
+  //this validates the types of the payload
+  //this is the true validation function, that takes in the fieldKey name so fullName and its value and validates its type against the constraints written on the schema
   private validateSingleType(fieldKey: string, fieldValue: any) {
-    const ruleSet: OptionsType = this.schema[fieldKey];
+    //these are the rules or constraints of each inputted fieldkey 
+    const ruleSet: OptionsType | FieldOptions = this.schema[fieldKey];
+    //now it loops through the rules or constraints
     for (const rule in ruleSet) {
+      //start of switch case looping through the rules, string, date, min, password etc.
+      //if the constraint is not met, it calls on the createErrorObject method to create an error object then adds it to the errorStorage array
       switch (rule) {
         case "string":
           if (ruleSet[rule]) {
@@ -283,13 +314,19 @@ class SchemaBuilder {
           }
           break;
         case "min":
+          //this case is different but not too much
+          //it first checks if the val is a number, if it isn't it is trimmed, else: not
           if (ruleSet[rule] !== -1) {
             const trimmedValue = isNaN(fieldValue)
               ? fieldValue.trim()
               : fieldValue;
+            const minRule = ruleSet[rule];
+            //this is ensuring minrule is truthy, and if it is and it is nan and trimmed.lenght is less then minRule of ruleset[rule] or if minrule is truthy and its greater than the trimmedvalu then it throws an error, maxRule is also the same
             if (
-              (isNaN(trimmedValue) && trimmedValue.length < ruleSet[rule]) ||
-              trimmedValue < ruleSet[rule]
+              (minRule &&
+                isNaN(trimmedValue) &&
+                trimmedValue.length < minRule) ||
+              (minRule && trimmedValue < minRule)
             ) {
               const errorToInsert = this.createErrorObject(
                 rule,
@@ -303,13 +340,16 @@ class SchemaBuilder {
           }
           break;
         case "max":
-          if (ruleSet[rule] !== -1) {
+          if (ruleSet && ruleSet[rule] !== -1) {
             const trimmedValue = isNaN(fieldValue)
               ? fieldValue.trim()
               : fieldValue;
+            const maxRule = ruleSet[rule];
             if (
-              (isNaN(trimmedValue) && trimmedValue.length > ruleSet[rule]) ||
-              trimmedValue > ruleSet[rule]
+              (maxRule &&
+                isNaN(trimmedValue) &&
+                trimmedValue.length > maxRule) ||
+              (maxRule && trimmedValue > maxRule)
             ) {
               const errorToInsert = this.createErrorObject(
                 rule,
@@ -326,7 +366,8 @@ class SchemaBuilder {
           const trimmedValue = isNaN(fieldValue)
             ? fieldValue.trim()
             : fieldValue;
-          if (!ruleSet[rule].test(trimmedValue)) {
+          const reg = ruleSet[rule];
+          if (reg && reg.test(trimmedValue)) {
             const errorToInsert = this.createErrorObject(
               rule,
               fieldKey,
@@ -338,6 +379,7 @@ class SchemaBuilder {
       }
     }
   }
+  //this expects the user input to be once a user submits an entire payload 
   public validate(
     user_input: Record<string, string | boolean | number | RegExp>
   ) {
@@ -361,16 +403,27 @@ class SchemaBuilder {
         }
       }
     }
-    //now i am going to validate the types z(f(x))
+    //now i am going to validate the types against their constraints pre defined by the schema
     for (const property in user_input) {
       this.validateSingleType(property, user_input[property]);
     }
-
-    throw this.errorStorage.slice(1);
+    //this code below grabs the error object array this.errorStorage;
+    //it loops through the storage, takes the entries, filters through them and returns only those errors that are truthy and then makes an object from those entries and then spreads the trimmedErrorObject array and inserts that object in it, then at the end, it throws it 
+    let trimmedErrorObject: Record<string, string>[] = [];
+    for (const err in this.errorStorage.slice(1)) {
+      const entries = Object.entries(this.errorStorage[err]);
+      const filteredEntries = Object.fromEntries(
+        entries.filter((n, i) => n[1])
+      );
+      trimmedErrorObject = [...trimmedErrorObject, filteredEntries];
+    }
+    if (trimmedErrorObject.slice(1)) {
+      throw trimmedErrorObject.slice(1);
+    } else {
+      return;
+    }
   }
   public peek() {
     return this.schema;
   }
 }
-
-module.exports = SchemaBuilder;
