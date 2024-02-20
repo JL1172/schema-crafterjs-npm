@@ -54,6 +54,19 @@ class SchemaBuilder {
   private emailRegex: RegExp =
     /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
   //the error type that exists within the errorstorage array as such ErrorType[]
+  private defaultError: ErrorType = {
+    field: "",
+    required: "",
+    min: "",
+    max: "",
+    matches: "",
+    string: "",
+    number: "",
+    boolean: "",
+    date: "",
+    email: "",
+    password: "",
+  };
   private error: ErrorType = {
     field: "",
     required: "",
@@ -459,8 +472,13 @@ class SchemaBuilder {
   public validate(
     user_input: Record<string, string | boolean | number | RegExp | Date>
   ) {
+    this.errorStorage = [this.defaultError];
     if (!user_input) {
-      const errorToInsert = this.createErrorObject("","", "Cannot Submit Empty Payload.");
+      const errorToInsert = this.createErrorObject(
+        "",
+        "",
+        "Cannot Submit Empty Payload."
+      );
       this.addErrorToList(errorToInsert);
       throw this.errorStorage.slice(1);
     }
