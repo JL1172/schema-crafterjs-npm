@@ -372,3 +372,5 @@ class SchemaBuilder {
     return this.schema;
   }
 }
+
+module.exports = SchemaBuilder;

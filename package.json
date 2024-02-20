@@ -1,17 +1,16 @@
 {
   "name": "strict-schema",
   "version": "1.0.1",
-  "description": "",
   "main": "index.ts",
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "JL1172",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.11.19",
-    "typescript": "^5.3.3"
-  }
+    "@types/node": "^20.11.19"
+  },
+  "description": ""
 }
