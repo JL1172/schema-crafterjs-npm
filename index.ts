@@ -44,6 +44,7 @@ interface ErrorType {
   email: string;
   password: string;
 }
+
 //this is the only class in this package
 export class SchemaBuilder {
   //password regex
