@@ -24,6 +24,19 @@ schema.build({
   },
 });
 
-schema.validate({fullName: 'jacob lang', email: 'jacoblang127@gmail.com', username: 'jacoblang11', password: 'helloWorld11', age: 18,});
+async function validation() {
+  try {
+    await schema.validate({
+      fullName: "ed",
+      email: "jacoblang127gmail.com",
+      username: "w",
+      password: "helloWorld",
+      age: 11,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+validation();
 // const schema_peeked = schema.peek();
 // console.log(schema_peeked);

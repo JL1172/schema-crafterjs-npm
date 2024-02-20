@@ -17,11 +17,51 @@ type OptionsType = {
   email: boolean;
   password: boolean;
 };
-
+type ErrorType = {
+  field: string;
+  required: string;
+  min: string;
+  max: string;
+  matches: string;
+  string: string;
+  number: string;
+  boolean: string;
+  date: string;
+  email: string;
+  password: string;
+};
 //main class
 class SchemaBuilder {
   //initialization as private to ensure no outside access
   //initialization default_type in order to allow easy reset later
+  private error: ErrorType = {
+    field: "",
+    required: "",
+    min: "",
+    max: "",
+    matches: "",
+    string: "",
+    number: "",
+    boolean: "",
+    date: "",
+    email: "",
+    password: "",
+  };
+  private errorStorage: ErrorType[] = [
+    {
+      field: "",
+      required: "",
+      min: "",
+      max: "",
+      matches: "",
+      string: "",
+      number: "",
+      boolean: "",
+      date: "",
+      email: "",
+      password: "",
+    },
+  ];
   private readonly default_type: OptionsType = {
     required: true,
     min: -1,
@@ -35,10 +75,7 @@ class SchemaBuilder {
     password: false,
   };
 
-  private schema: Record<string, OptionsType>;
-  constructor() {
-    this.schema = { demo: this.default_type };
-  }
+  private schema: Record<string, OptionsType> = { demo: this.default_type };
   //setting options
   private readonly options: OptionsType = this.default_type;
   //main builder function
@@ -158,6 +195,13 @@ class SchemaBuilder {
     }
     this.schema = user_input;
   }
+  private createErrorObject(rule: string, key: string, errorMessage: string) {
+    const errorPartOne = { ...this.error, [rule]: errorMessage, field: key };
+    return errorPartOne;
+  }
+  private addErrorToList(error: ErrorType) {
+    this.errorStorage.push(error);
+  }
   private validateSingleKey(key: string) {
     return this.schema.hasOwnProperty(key);
   }
@@ -168,42 +212,72 @@ class SchemaBuilder {
         case "string":
           if (ruleSet[rule]) {
             if (typeof fieldValue !== "string") {
-              throw new TypeError(`${fieldKey} Must Be String.`);
+              const errorToInsert = this.createErrorObject(
+                rule,
+                fieldKey,
+                `${fieldKey} Must Be String.`
+              );
+              this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "number":
           if (ruleSet[rule]) {
             if (typeof fieldValue !== "number") {
-              throw new TypeError(`${fieldKey} Must Be Number.`);
+              const errorToInsert = this.createErrorObject(
+                rule,
+                fieldKey,
+                `${fieldKey} Must Be Number.`
+              );
+              this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "date":
           if (ruleSet[rule]) {
             if (fieldValue instanceof Date) {
-              throw new TypeError(`${fieldKey} Must Be Date.`);
+              const errorToInsert = this.createErrorObject(
+                rule,
+                fieldKey,
+                `${fieldKey} Must Be Date.`
+              );
+              this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "boolean":
           if (ruleSet[rule]) {
             if (typeof fieldValue !== "boolean") {
-              throw new TypeError(`${fieldKey} Must Be Boolean.`);
+              const errorToInsert = this.createErrorObject(
+                rule,
+                fieldKey,
+                `${fieldKey} Must Be Boolean.`
+              );
+              this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "email":
           if (ruleSet[rule]) {
             if (!emailRegex.test(fieldValue)) {
-              throw new TypeError(`${fieldKey} Must Be A Valid Email.`);
+              const errorToInsert = this.createErrorObject(
+                rule,
+                fieldKey,
+                `${fieldKey} Must Be A Valid Email.`
+              );
+              this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "password":
           if (ruleSet[rule]) {
             if (!passwordRegex.test(fieldValue)) {
-              throw new TypeError(`${fieldKey} Must Be A Strong Password.`);
+              const errorToInsert = this.createErrorObject(
+                rule,
+                fieldKey,
+                `${fieldKey} Must Be A Strong Password.`
+              );
+              this.addErrorToList(errorToInsert);
             }
           }
           break;
@@ -212,12 +286,18 @@ class SchemaBuilder {
             const trimmedValue = isNaN(fieldValue)
               ? fieldValue.trim()
               : fieldValue;
-            if (trimmedValue < ruleSet[rule]) {
-              throw new Error(
+            if (
+              (isNaN(trimmedValue) && trimmedValue.length < ruleSet[rule]) ||
+              trimmedValue < ruleSet[rule]
+            ) {
+              const errorToInsert = this.createErrorObject(
+                rule,
+                fieldKey,
                 isNaN(fieldValue)
                   ? `${fieldKey} Must Be A Length Greater Than ${ruleSet[rule]} Characters.`
-                  : `${fieldKey} Must Be Less Than ${ruleSet[rule]}.`
+                  : `${fieldKey} Must Be Greater Than ${ruleSet[rule]}.`
               );
+              this.addErrorToList(errorToInsert);
             }
           }
           break;
@@ -226,12 +306,18 @@ class SchemaBuilder {
             const trimmedValue = isNaN(fieldValue)
               ? fieldValue.trim()
               : fieldValue;
-            if (trimmedValue > ruleSet[rule]) {
-              throw new Error(
+            if (
+              (isNaN(trimmedValue) && trimmedValue.length > ruleSet[rule]) ||
+              trimmedValue > ruleSet[rule]
+            ) {
+              const errorToInsert = this.createErrorObject(
+                rule,
+                fieldKey,
                 isNaN(fieldValue)
                   ? `${fieldKey} Must Be A Length Less Than ${ruleSet[rule]} Characters.`
                   : `${fieldKey} Must Be Less Than ${ruleSet[rule]}.`
               );
+              this.addErrorToList(errorToInsert);
             }
           }
           break;
@@ -240,9 +326,12 @@ class SchemaBuilder {
             ? fieldValue.trim()
             : fieldValue;
           if (!ruleSet[rule].test(trimmedValue)) {
-            throw new Error(
+            const errorToInsert = this.createErrorObject(
+              rule,
+              fieldKey,
               `${fieldKey} Does Not Contain Correct Patterns. ${ruleSet[rule]}.`
             );
+            this.addErrorToList(errorToInsert);
           }
           break;
       }
@@ -262,7 +351,12 @@ class SchemaBuilder {
     for (const s in this.schema) {
       if (this.schema[s].required) {
         if (!user_input.hasOwnProperty(s)) {
-          throw new Error(`${s} Field Is Required.`);
+          const errorToInsert = this.createErrorObject(
+            s,
+            s,
+            `${s} Field Is Required.`
+          );
+          this.addErrorToList(errorToInsert);
         }
       }
     }
@@ -270,6 +364,8 @@ class SchemaBuilder {
     for (const property in user_input) {
       this.validateSingleType(property, user_input[property]);
     }
+
+    throw this.errorStorage.slice(1);
   }
   public peek() {
     return this.schema;
