@@ -1,6 +1,6 @@
 {
   "name": "strict-schema",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "main": "index.ts",
   "type": "commonjs",
   "scripts": {
