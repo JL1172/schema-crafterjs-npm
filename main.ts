@@ -23,7 +23,8 @@
 //     max: 120,
 //   },
 // });
-
+// const result = schema.peek();
+// console.log(result);
 // async function validation() {
 //   try {
 //     await schema.validate({
