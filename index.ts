@@ -459,6 +459,11 @@ class SchemaBuilder {
   public validate(
     user_input: Record<string, string | boolean | number | RegExp | Date>
   ) {
+    if (!user_input) {
+      const errorToInsert = this.createErrorObject("","", "Cannot Submit Empty Payload.");
+      this.addErrorToList(errorToInsert);
+      throw this.errorStorage.slice(1);
+    }
     //first need to loop through given input, this could be an entire payload after a user clicks a button
     //this loop validates that there are no extraneous properties on the user payload that do not align with the schema
     for (const property in user_input) {
