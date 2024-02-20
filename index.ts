@@ -1,31 +1,34 @@
 //this interface is for establishing the schema on the schema.build method
+//these types allow the handling of a boolean or number or regexp and then the string, this is for the error message
+type ArrayBooleanType = [boolean, string];
+type ArrayNumberType = [number, string];
+type ArrayRegExpType = [boolean, RegExp, string];
 interface FieldOptions {
-  required?: boolean;
-  min?: number;
-  max?: number;
-  matches?: RegExp;
-  string?: boolean;
-  number?: boolean;
-  boolean?: boolean;
-  date?: boolean;
-  email?: boolean;
-  password?: boolean;
+  required?: ArrayBooleanType;
+  min?: ArrayNumberType;
+  max?: ArrayNumberType;
+  matches?: ArrayRegExpType;
+  string?: ArrayBooleanType;
+  number?: ArrayBooleanType;
+  boolean?: ArrayBooleanType;
+  date?: ArrayBooleanType;
+  email?: ArrayBooleanType;
+  password?: ArrayBooleanType;
 }
-
 //this interface is for the schema when these fields are required to be filled out, a little unecessary, but nice to have just in case
-type FieldType = boolean | number | RegExp | string;
+type FieldType = ArrayBooleanType | ArrayNumberType | ArrayRegExpType;
 interface OptionsType {
   [key: string]: FieldType;
-  required: boolean;
-  min: number;
-  max: number;
-  matches: RegExp;
-  string: boolean;
-  number: boolean;
-  boolean: boolean;
-  date: boolean;
-  email: boolean;
-  password: boolean;
+  required: ArrayBooleanType;
+  min: ArrayNumberType;
+  max: ArrayNumberType;
+  matches: ArrayRegExpType;
+  string: ArrayBooleanType;
+  number: ArrayBooleanType;
+  boolean: ArrayBooleanType;
+  date: ArrayBooleanType;
+  email: ArrayBooleanType;
+  password: ArrayBooleanType;
 }
 //this interface is for the returned error array, this dto makes up all records in the errorStorage array
 interface ErrorType {
@@ -80,16 +83,16 @@ export class SchemaBuilder {
   ];
   //initialization default_type in order to allow easy reset later
   private readonly default_type: OptionsType = {
-    required: true,
-    min: -1,
-    max: -1,
-    matches: new RegExp(""),
-    string: false,
-    number: false,
-    boolean: false,
-    date: false,
-    email: false,
-    password: false,
+    required: [true, ""],
+    min: [-1, ""],
+    max: [-1, ""],
+    matches: [false, new RegExp(""), ""],
+    string: [false, ""],
+    number: [false, ""],
+    boolean: [false, ""],
+    date: [false, ""],
+    email: [false, ""],
+    password: [false, ""],
   };
   //this is the main schema that is carried along the entire process, there is a place holder that has all default values
   private schema: Record<string, OptionsType | FieldOptions> = {
@@ -111,75 +114,125 @@ export class SchemaBuilder {
       for (const option in user_input[input]) {
         switch (option) {
           case "email":
-            if (typeof user_input[input][option] !== "boolean") {
+            if (typeof user_input[input][option]?.[0] !== "boolean") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Boolean.`
+              );
+            }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
               );
             }
             break;
           case "password":
-            if (typeof user_input[input][option] !== "boolean") {
+            if (typeof user_input[input][option]?.[0] !== "boolean") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Boolean.`
+              );
+            }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
               );
             }
             break;
           case "string":
-            if (typeof user_input[input][option] !== "boolean") {
+            if (typeof user_input[input][option]?.[0] !== "boolean") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Boolean.`
+              );
+            }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
               );
             }
             break;
           case "required":
-            if (typeof user_input[input][option] !== "boolean") {
+            if (typeof user_input[input][option]?.[0] !== "boolean") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Boolean.`
+              );
+            }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
               );
             }
             break;
           case "number":
-            if (typeof user_input[input][option] !== "boolean") {
+            if (typeof user_input[input][option]?.[0] !== "boolean") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Boolean.`
+              );
+            }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
               );
             }
             break;
           case "date":
-            if (typeof user_input[input][option] !== "boolean") {
+            if (typeof user_input[input][option]?.[0] !== "boolean") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Boolean.`
+              );
+            }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
               );
             }
             break;
           case "boolean":
-            if (typeof user_input[input][option] !== "boolean") {
+            if (typeof user_input[input][option]?.[0] !== "boolean") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Boolean.`
               );
             }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
+              );
+            }
             break;
           case "min":
-            if (typeof user_input[input][option] !== "number") {
+            if (typeof user_input[input][option]?.[0] !== "number") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Number.`
               );
             }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
+              );
+            }
             break;
           case "max":
-            if (typeof user_input[input][option] !== "number") {
+            if (typeof user_input[input][option]?.[0] !== "number") {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Number.`
+              );
+            }
+            if (typeof user_input[input][option]?.[1] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
               );
             }
             break;
           case "matches":
             if (
-              typeof user_input[input][option] !== "object" &&
-              user_input[input][option] instanceof RegExp
+              typeof user_input[input][option]?.[0] !== "boolean" &&
+              user_input[input][option]?.[1] instanceof RegExp
             ) {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Regex Instantiated By new RegExp()' Constructor.`
+              );
+            }
+            if (typeof user_input[input][option]?.[2] !== "string") {
+              throw new TypeError(
+                `Incorrect Type For Error Message: ${option}, Must Be A String.`
               );
             }
             break;
@@ -189,8 +242,14 @@ export class SchemaBuilder {
       const { number, boolean, date, string, email, password } =
         user_input[input];
       const dataTypesAreUnique: number =
-        [number, boolean, date, string, email, password].filter((n) => n)
-          .length > 1
+        [
+          number?.[0],
+          boolean?.[0],
+          date?.[0],
+          string?.[0],
+          email?.[0],
+          password?.[0],
+        ].filter((n) => n).length > 1
           ? 0
           : 1;
       if (dataTypesAreUnique === 0) {
@@ -204,7 +263,7 @@ export class SchemaBuilder {
     for (const option in this.options) {
       //second loop loops through the properties in the user input fullName, username, etc.
       for (const property in user_input) {
-        //it is reconciling if userinput[property] (fullName: {string: true}) has all the necessary "meta" configuration, 
+        //it is reconciling if userinput[property] (fullName: {string: true}) has all the necessary "meta" configuration,
         if (!user_input[property].hasOwnProperty(option)) {
           //if it doesn't it adds the property, by assigning user_input to shallow copy with that option dynamically added to the default value
           user_input[property] = {
@@ -234,7 +293,7 @@ export class SchemaBuilder {
   //this validates the types of the payload
   //this is the true validation function, that takes in the fieldKey name so fullName and its value and validates its type against the constraints written on the schema
   private validateSingleType(fieldKey: string, fieldValue: any) {
-    //these are the rules or constraints of each inputted fieldkey 
+    //these are the rules or constraints of each inputted fieldkey
     const ruleSet: OptionsType | FieldOptions = this.schema[fieldKey];
     //now it loops through the rules or constraints
     for (const rule in ruleSet) {
@@ -242,72 +301,78 @@ export class SchemaBuilder {
       //if the constraint is not met, it calls on the createErrorObject method to create an error object then adds it to the errorStorage array
       switch (rule) {
         case "string":
-          if (ruleSet[rule]) {
+          if (ruleSet[rule]?.[0]) {
             if (typeof fieldValue !== "string") {
+              const message = ruleSet[rule]?.[1];
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
-                `${fieldKey} Must Be String.`
+                message ? message : `${fieldKey} Must Be String.`
               );
               this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "number":
-          if (ruleSet[rule]) {
+          if (ruleSet[rule]?.[0]) {
             if (typeof fieldValue !== "number") {
+              const message = ruleSet[rule]?.[1];
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
-                `${fieldKey} Must Be Number.`
+                message ? message : `${fieldKey} Must Be Number.`
               );
               this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "date":
-          if (ruleSet[rule]) {
-            if (fieldValue instanceof Date) {
+          if (ruleSet[rule]?.[0]) {
+            if (!(fieldValue instanceof Date)) {
+              const message = ruleSet[rule]?.[1];
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
-                `${fieldKey} Must Be Date.`
+                message ? message : `${fieldKey} Must Be Date.`
               );
               this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "boolean":
-          if (ruleSet[rule]) {
+          if (ruleSet[rule]?.[0]) {
             if (typeof fieldValue !== "boolean") {
+              const message = ruleSet[rule]?.[1];
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
-                `${fieldKey} Must Be Boolean.`
+                message ? message : `${fieldKey} Must Be Boolean.`
               );
               this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "email":
-          if (ruleSet[rule]) {
+          if (ruleSet[rule]?.[0]) {
             if (!this.emailRegex.test(fieldValue)) {
+              const message = ruleSet[rule]?.[1];
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
-                `${fieldKey} Must Be A Valid Email.`
+                message ? message : `${fieldKey} Must Be A Valid Email.`
               );
               this.addErrorToList(errorToInsert);
             }
           }
           break;
         case "password":
-          if (ruleSet[rule]) {
+          if (ruleSet[rule]?.[0]) {
             if (!this.passwordRegex.test(fieldValue)) {
+              const message = ruleSet[rule]?.[1];
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
-                `${fieldKey} Must Be A Strong Password.`
+                message ? message : `${fieldKey} Must Be A Strong Password.`
               );
               this.addErrorToList(errorToInsert);
             }
@@ -316,11 +381,11 @@ export class SchemaBuilder {
         case "min":
           //this case is different but not too much
           //it first checks if the val is a number, if it isn't it is trimmed, else: not
-          if (ruleSet[rule] !== -1) {
+          if (ruleSet[rule]?.[0] !== -1) {
             const trimmedValue = isNaN(fieldValue)
               ? fieldValue.trim()
               : fieldValue;
-            const minRule = ruleSet[rule];
+            const minRule = ruleSet[rule]?.[0];
             //this is ensuring minrule is truthy, and if it is and it is nan and trimmed.lenght is less then minRule of ruleset[rule] or if minrule is truthy and its greater than the trimmedvalu then it throws an error, maxRule is also the same
             if (
               (minRule &&
@@ -328,10 +393,13 @@ export class SchemaBuilder {
                 trimmedValue.length < minRule) ||
               (minRule && trimmedValue < minRule)
             ) {
+              const message = ruleSet[rule]?.[1];
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
-                isNaN(fieldValue)
+                message
+                  ? message
+                  : isNaN(fieldValue)
                   ? `${fieldKey} Must Be A Length Greater Than ${ruleSet[rule]} Characters.`
                   : `${fieldKey} Must Be Greater Than ${ruleSet[rule]}.`
               );
@@ -340,21 +408,24 @@ export class SchemaBuilder {
           }
           break;
         case "max":
-          if (ruleSet && ruleSet[rule] !== -1) {
+          if (ruleSet && ruleSet[rule]?.[0] !== -1) {
             const trimmedValue = isNaN(fieldValue)
               ? fieldValue.trim()
               : fieldValue;
-            const maxRule = ruleSet[rule];
+            const maxRule = ruleSet[rule]?.[0];
             if (
               (maxRule &&
                 isNaN(trimmedValue) &&
                 trimmedValue.length > maxRule) ||
               (maxRule && trimmedValue > maxRule)
             ) {
+              const message = ruleSet[rule]?.[1];
               const errorToInsert = this.createErrorObject(
                 rule,
                 fieldKey,
-                isNaN(fieldValue)
+                message
+                  ? message
+                  : isNaN(fieldValue)
                   ? `${fieldKey} Must Be A Length Less Than ${ruleSet[rule]} Characters.`
                   : `${fieldKey} Must Be Less Than ${ruleSet[rule]}.`
               );
@@ -366,12 +437,16 @@ export class SchemaBuilder {
           const trimmedValue = isNaN(fieldValue)
             ? fieldValue.trim()
             : fieldValue;
-          const reg = ruleSet[rule];
-          if (reg && reg.test(trimmedValue)) {
+          const regIsOccupied = ruleSet[rule]?.[0];
+          const reg = ruleSet[rule]?.[1];
+          if (regIsOccupied && !(reg && reg.test(trimmedValue))) {
+            const message = ruleSet[rule]?.[2];
             const errorToInsert = this.createErrorObject(
               rule,
               fieldKey,
-              `${fieldKey} Does Not Contain Correct Patterns. ${ruleSet[rule]}.`
+              message
+                ? message
+                : `${fieldKey} Does Not Contain Correct Patterns. ${ruleSet[rule]?.[0]}.`
             );
             this.addErrorToList(errorToInsert);
           }
@@ -379,9 +454,9 @@ export class SchemaBuilder {
       }
     }
   }
-  //this expects the user input to be once a user submits an entire payload 
+  //this expects the user input to be once a user submits an entire payload
   public validate(
-    user_input: Record<string, string | boolean | number | RegExp>
+    user_input: Record<string, string | boolean | number | RegExp | Date>
   ) {
     //first need to loop through given input, this could be an entire payload after a user clicks a button
     //this loop validates that there are no extraneous properties on the user payload that do not align with the schema
@@ -392,12 +467,13 @@ export class SchemaBuilder {
     }
     //this ensures that the input has all of the properties that were required by the schema
     for (const s in this.schema) {
-      if (this.schema[s].required) {
+      if (this.schema[s].required?.[0]) {
+        const message = this.schema[s].required?.[1];
         if (!user_input.hasOwnProperty(s)) {
           const errorToInsert = this.createErrorObject(
             s,
             s,
-            `${s} Field Is Required.`
+            message ? message : `${s} Field Is Required.`
           );
           this.addErrorToList(errorToInsert);
         }
@@ -408,16 +484,16 @@ export class SchemaBuilder {
       this.validateSingleType(property, user_input[property]);
     }
     //this code below grabs the error object array this.errorStorage;
-    //it loops through the storage, takes the entries, filters through them and returns only those errors that are truthy and then makes an object from those entries and then spreads the trimmedErrorObject array and inserts that object in it, then at the end, it throws it 
+    //it loops through the storage, takes the entries, filters through them and returns only those errors that are truthy and then makes an object from those entries and then spreads the trimmedErrorObject array and inserts that object in it, then at the end, it throws it
     let trimmedErrorObject: Record<string, string>[] = [];
-    for (const err in this.errorStorage.slice(1)) {
+    for (const err in this.errorStorage) {
       const entries = Object.entries(this.errorStorage[err]);
       const filteredEntries = Object.fromEntries(
         entries.filter((n, i) => n[1])
       );
       trimmedErrorObject = [...trimmedErrorObject, filteredEntries];
     }
-    if (trimmedErrorObject.slice(1)) {
+    if (trimmedErrorObject.slice(1).length > 0) {
       throw trimmedErrorObject.slice(1);
     } else {
       return;
