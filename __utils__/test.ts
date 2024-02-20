@@ -1,5 +1,6 @@
-import { SchemaBuilder } from "../index";
-
+// import { SchemaBuilder } from "./index";
+/*
+this file is emitted because it is only for development
 const schema = new SchemaBuilder();
 
 schema.build({
@@ -41,3 +42,4 @@ async function validateSubmission() {
 validateSubmission();
 
 // console.log(schema.peek());
+*/

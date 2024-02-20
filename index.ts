@@ -46,7 +46,7 @@ interface ErrorType {
 }
 
 //this is the only class in this package
-export class SchemaBuilder {
+class SchemaBuilder {
   //password regex
   private passwordRegex: RegExp =
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
@@ -504,3 +504,4 @@ export class SchemaBuilder {
     return this.schema;
   }
 }
+module.exports = SchemaBuilder;
