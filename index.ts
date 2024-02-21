@@ -457,7 +457,7 @@ class SchemaBuilder {
                   ? message
                   : isNaN(fieldValue)
                   ? `${fieldKey} Must Be A Length Less Than ${ruleSet[rule]} Characters.`
-                  : `${fieldKey} Must Be Less Than ${ruleSet[rule]}.`
+                  : `${fieldKey} Must Be Less Than ${ruleSet[rule]}`
               );
               this.addErrorToList(errorToInsert);
             }

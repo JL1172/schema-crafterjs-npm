@@ -9,6 +9,41 @@ const INSUFFICIENT_PAYLOAD_INSTANCE = {
   created_at: "",
   username: "",
 };
+const INCORRECT_PAYLOAD_MIN_INSTANCE = {
+  fullName: "Jacob Lang",
+  email: "jacoblang127@gmail.com",
+  password: "helloWorld11",
+  age: 17,
+  created_at: new Date(),
+  username: "jacoblang11",
+};
+const INCORRECT_PAYLOAD_EMAIL_INSTANCE = {
+  fullName: "Jacob Lang",
+  email: "jacoblang127gmail.com",
+  password: "helloWorld11",
+  age: 17,
+  created_at: new Date(),
+  username: "jacoblang11",
+};
+const INCORRECT_PAYLOAD_MAX_INSTANCE = {
+  fullName: "Jacob Lang",
+  email: "jacoblang127@gmail.com",
+  password: "helloWorld11",
+  age: 122,
+  created_at: new Date(),
+  username: "jacoblang11",
+};
+const INCORRECT_PAYLOAD_PASSWORD_INSTANCE = {
+  fullName: "Jacob Lang",
+  email: "jacoblang127@gmail.com",
+  password: "helloWorld",
+  age: 18,
+  created_at: new Date(),
+  username: "jacoblang11",
+};
+const OMITTED_PAYLOAD_INSTANCE = {
+  fullName: "",
+};
 const EXPECTED_ERROR_OBJECT = [
   {
     field: "",
@@ -31,6 +66,14 @@ const CORRECT_PAYLOAD = {
   age: 18,
   created_at: new Date(),
   username: "jacoblang11",
+};
+const INCORRECT_PAYLOAD_REGEX_INSTANCE = {
+  fullName: "Jacob Lang",
+  email: "jacoblang127@gmail.com",
+  password: "helloWorld11",
+  age: 18,
+  created_at: new Date(),
+  username: "jacoblang11?",
 };
 const EXTRANEOUS_PROPERTY_INSTANCE = {
   fullName: "jacob lang",
@@ -79,8 +122,8 @@ const EXPECT_SCHEMA = {
   age: {
     number: [true, "Age Must Be A Number."],
     min: [18, "Must Be Older Than 18"],
+    max: [120, ""],
     required: [true, "Age Required."],
-    max: [-1, ""],
     matches: [false, /(?:)/, ""],
     string: [false, ""],
     boolean: [false, ""],
@@ -144,6 +187,7 @@ const CORRECT_SCHEMA = {
   age: {
     number: [true, "Age Must Be A Number."],
     min: [18, "Must Be Older Than 18"],
+    max: [120, ""],
     required: [true, "Age Required."],
   },
   created_at: {
@@ -360,6 +404,80 @@ describe("Runs Every Edge Case And Ensures The Data Pipeline Does Not Get Clogge
     try {
       const result = await schema.validate(CORRECT_PAYLOAD);
       expect(result).toBeFalsy();
+      expect(result).toBeUndefined();
+    } catch (err: any) {}
+    expect(schema.peekError()).toMatchObject(EXPECTED_ERROR_OBJECT);
+  });
+  test("Ensures That If A Property Is Missing From The Actual Payload, It Throws An Error.", async () => {
+    expect(schema.peekError()).toMatchObject(EXPECTED_ERROR_OBJECT);
+    try {
+      await schema.validate(OMITTED_PAYLOAD_INSTANCE);
+    } catch (err: any) {
+      expect(err).toMatchObject([
+        {
+          field: "fullName",
+          min: "Full Name Must Not Be Less Than 5 Characters.",
+          fullName: "Full Name Required.",
+        },
+        { field: "email", email: "Email Required." },
+        { field: "password", password: "Password Required." },
+        { field: "age", age: "Age Required." },
+        { field: "created_at", created_at: "Timestamp Required" },
+        { field: "username", username: "Username Required." },
+      ]);
+    }
+  });
+  test("Ensures That Correct Payload Yields No Error.", async () => {
+    try {
+      const result = await schema.validate(CORRECT_PAYLOAD);
+      expect(result).toBeUndefined();
+    } catch (err: any) {}
+    expect(schema.peekError()).toMatchObject(EXPECTED_ERROR_OBJECT);
+  });
+  test("Throws Error On Min Constraint.", async () => {
+    try {
+      const result = await schema.validate(INCORRECT_PAYLOAD_MIN_INSTANCE);
+    } catch (err: any) {
+      expect(err).toMatchObject([
+        { field: "age", min: "Must Be Older Than 18" },
+      ]);
+    }
+  });
+  test("Throws Error On Max Constraint.", async () => {
+    try {
+      const result = await schema.validate(INCORRECT_PAYLOAD_MAX_INSTANCE);
+    } catch (err: any) {
+      expect(err).toMatchObject([
+        { field: "age", max: "age Must Be Less Than 120," },
+      ]);
+    }
+  });
+  test("Throws Error On Type Constraint.", async () => {
+    try {
+      const result = await schema.validate(INCORRECT_PAYLOAD_PASSWORD_INSTANCE);
+    } catch (err: any) {
+      expect(err).toMatchObject([
+        {
+          field: "password",
+          password:
+            "Must Be A Strong Password: containing uppercase, number, and lowercase.",
+        },
+      ]);
+    }
+  });
+  test("Throws Error On Email Constraint.", async () => {
+    try {
+      const result = await schema.validate(INCORRECT_PAYLOAD_EMAIL_INSTANCE);
+    } catch (err: any) {
+      expect(err).toMatchObject([
+        { field: "email", email: "Must Be A Valid Email." },
+        { field: "age", min: "Must Be Older Than 18" },
+      ]);
+    }
+  });
+  test("Throws No Error On Correct Submission.", async () => {
+    try {
+      const result = await schema.validate(CORRECT_PAYLOAD);
       expect(result).toBeUndefined();
     } catch (err: any) {
     }
