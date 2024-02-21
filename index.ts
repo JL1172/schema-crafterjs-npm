@@ -239,10 +239,12 @@ class SchemaBuilder {
             }
             break;
           case "matches":
-            if (
-              typeof user_input[input][option]?.[0] !== "boolean" &&
-              user_input[input][option]?.[1] instanceof RegExp
-            ) {
+            if (typeof user_input[input][option]?.[0] !== "boolean") {
+              throw new TypeError(
+                `Incorrect Type For '${option}', Must Be Boolean.`
+              );
+            }
+            if (!(user_input[input][option]?.[1] instanceof RegExp)) {
               throw new TypeError(
                 `Incorrect Type For '${option}', Must Be Regex Instantiated By new RegExp()' Constructor.`
               );
