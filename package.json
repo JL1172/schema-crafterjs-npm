@@ -1,6 +1,6 @@
 {
   "name": "formulate-schema",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "index.js",
   "type": "commonjs",
   "types": "index.d.ts",
