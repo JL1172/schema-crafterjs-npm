@@ -116,6 +116,9 @@ class SchemaBuilder {
   private readonly options: OptionsType = this.default_type;
   //main builder function
   public build(user_input: Record<string | symbol, FieldOptions>) {
+    if (!user_input) {
+      throw new Error("This Method Requires An Argument.");
+    }
     for (const input in user_input) {
       //ensuring no keys in userinput vary from keys in options, making sure no errors, etc.
       const keys = Object.keys(user_input[input]);
