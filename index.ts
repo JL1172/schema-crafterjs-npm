@@ -303,7 +303,18 @@ class SchemaBuilder {
   }
   //this is a setter method that adds the error to the errorStorage object which is inevitably returned to the user at the end of all of this
   private addErrorToList(error: ErrorType) {
-    this.errorStorage.push(error);
+    const entries = Object.entries(error).filter(
+      (n) => n[0] !== "field" && n[1]
+    );
+    const index = this.errorStorage.findIndex((n) => n.field === error.field);
+    if (index !== -1) {
+      this.errorStorage[index] = {
+        ...this.errorStorage[index],
+        [entries[0][0]]: entries[0][1],
+      };
+    } else {
+      this.errorStorage.push(error);
+    }
   }
   //this validates that the schema has a one to one replica per-se of the keys in the given payload
   private validateSingleKey(key: string) {
@@ -479,13 +490,7 @@ class SchemaBuilder {
   ) {
     this.errorStorage = [this.defaultError];
     if (!user_input) {
-      const errorToInsert = this.createErrorObject(
-        "",
-        "",
-        "Cannot Submit Empty Payload."
-      );
-      this.addErrorToList(errorToInsert);
-      throw this.errorStorage.slice(1);
+      throw new Error("Cannot Submit Empty Payload.");
     }
     //first need to loop through given input, this could be an entire payload after a user clicks a button
     //this loop validates that there are no extraneous properties on the user payload that do not align with the schema
@@ -498,7 +503,10 @@ class SchemaBuilder {
     for (const s in this.schema) {
       if (this.schema[s].required?.[0]) {
         const message = this.schema[s].required?.[1];
-        if (!user_input.hasOwnProperty(s)) {
+        if (
+          !user_input.hasOwnProperty(s) ||
+          (user_input.hasOwnProperty(s) && !user_input[s])
+        ) {
           const errorToInsert = this.createErrorObject(
             s,
             s,
@@ -530,6 +538,9 @@ class SchemaBuilder {
   }
   public peek() {
     return this.schema;
+  }
+  public peekError() {
+    return this.errorStorage;
   }
 }
 module.exports = SchemaBuilder;

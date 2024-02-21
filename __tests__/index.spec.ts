@@ -1,6 +1,41 @@
 const Schema = require("../index");
 const schema = new Schema();
 
+const INSUFFICIENT_PAYLOAD_INSTANCE = {
+  fullName: "",
+  email: "",
+  password: "",
+  age: "",
+  created_at: "",
+  username: "",
+};
+const EXPECTED_ERROR_OBJECT = [
+  {
+    field: "",
+    required: "",
+    min: "",
+    max: "",
+    matches: "",
+    string: "",
+    number: "",
+    boolean: "",
+    date: "",
+    email: "",
+    password: "",
+  },
+];
+const CORRECT_PAYLOAD = {
+  fullName: "Jacob Lang",
+  email: "jacoblang127@gmail.com",
+  password: "helloWorld11",
+  age: 18,
+  created_at: new Date(),
+  username: "jacoblang11",
+};
+const EXTRANEOUS_PROPERTY_INSTANCE = {
+  fullName: "jacob lang",
+  helloWorld: "this will throw an error.",
+};
 const EXPECT_SCHEMA = {
   fullName: {
     string: [true, "Full Name Must Be A Valid String"],
@@ -265,5 +300,69 @@ describe("Runs Every Edge Case And Ensures The Data Pipeline Does Not Get Clogge
     const result = schema.peek();
     expect(result).toMatchObject(EXPECT_SCHEMA);
   });
-  
+  test("Throws Error If No Arguments Are Passed In Validate Function.", async () => {
+    try {
+      await schema.validate();
+    } catch (err: any) {
+      expect(err.message).toBe("Cannot Submit Empty Payload.");
+      expect(err).toBeInstanceOf(Error);
+    }
+  });
+  test("Throws Error If Schema Does Not Include A Property That Was Submitted In The Payload.", async () => {
+    try {
+      expect(schema.peekError()).toMatchObject(EXPECTED_ERROR_OBJECT);
+      await schema.validate(EXTRANEOUS_PROPERTY_INSTANCE);
+    } catch (err: any) {
+      expect(err.message).toBe("Schema Does Not Include Property: helloWorld.");
+    }
+    expect(schema.peekError()).toMatchObject(EXPECTED_ERROR_OBJECT);
+  });
+  test("Throws Error If There Is A Missing Field On Client Side That Is In The Schema.", async () => {
+    try {
+      expect(schema.peekError()).toMatchObject(EXPECTED_ERROR_OBJECT);
+      await schema.validate(INSUFFICIENT_PAYLOAD_INSTANCE);
+    } catch (err: any) {
+      expect(err).toMatchObject([
+        {
+          field: "fullName",
+          min: "Full Name Must Not Be Less Than 5 Characters.",
+          fullName: "Full Name Required.",
+        },
+        { field: "email", email: "Must Be A Valid Email." },
+        {
+          field: "password",
+          min: "Password Must Be Longer Than 8.",
+          password:
+            "Must Be A Strong Password: containing uppercase, number, and lowercase.",
+        },
+        {
+          field: "age",
+          min: "Must Be Older Than 18",
+          number: "Age Must Be A Number.",
+          age: "Age Required.",
+        },
+        {
+          field: "created_at",
+          date: "Must Be A Valid Date.",
+          created_at: "Timestamp Required",
+        },
+        {
+          field: "username",
+          min: "Username Must Be Longer Than 5 Characters.",
+          matches:
+            "Username Must Contain A Number, A Lowercase, and Uppercase Letter.",
+          username: "Username Required.",
+        },
+      ]);
+    }
+  });
+  test("Ensures That Data Is Validated And No Error Message Is Sent If Schema Is Correct.", async () => {
+    try {
+      const result = await schema.validate(CORRECT_PAYLOAD);
+      expect(result).toBeFalsy();
+      expect(result).toBeUndefined();
+    } catch (err: any) {
+    }
+    expect(schema.peekError()).toMatchObject(EXPECTED_ERROR_OBJECT);
+  });
 });
