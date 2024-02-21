@@ -58,4 +58,5 @@ declare class SchemaBuilder {
     peek(): Record<string, FieldOptions | OptionsType>;
     peekError(): ErrorType[];
 }
+declare module "formulate-schema";
 //# sourceMappingURL=index.d.ts.map
