@@ -1,8 +1,8 @@
-const schema2 = require("../index");
+const SBuilderInstance2 = require("../../index");
 
 let schema1: any;
 beforeEach(() => {
-  schema1 = new schema2();
+  schema1 = new SBuilderInstance2();
 });
 const correctPayload = {
   fullName: "Jacob Lang",
@@ -195,7 +195,7 @@ describe("Tests The Build Function.", () => {
   });
   test("Error Is Thrown If More Than One DataType Is Marked As A Constraint", async () => {
     try {
-      const result = await schema.build(incorrectSchemaToInsert);
+      const result = await schema1.build(incorrectSchemaToInsert);
       expect(result).toBe(null);
     } catch (err: any) {
       const message = err.message;
@@ -209,7 +209,7 @@ describe("Tests The Build Function.", () => {
   });
   test("TypeError Is Thrown If Wrong Type Is Assigned To An Option Field.", async () => {
     try {
-      const result = await schema.build(incorrectSchemaToInsertTwo);
+      const result = await schema1.build(incorrectSchemaToInsertTwo);
       console.log("result", result);
     } catch (err: any) {
       const message = err.message;
@@ -219,7 +219,7 @@ describe("Tests The Build Function.", () => {
   });
   test("Error Is Throw If Unacceptable Constraint Is Added To Schema Build.", async () => {
     try {
-      const result = await schema.build(incorrectSchemaToInsertThree);
+      const result = await schema1.build(incorrectSchemaToInsertThree);
     } catch (err: any) {
       const message = err.message;
       expect(message).toBeTruthy();
@@ -227,8 +227,8 @@ describe("Tests The Build Function.", () => {
     }
   });
   test("Validates That Build Function Does Work And That The Peek Function Returns The Correct Schema.", () => {
-    schema.build(correctSchemaToInsert);
-    const resultingSchema = schema.peek();
+    schema1.build(correctSchemaToInsert);
+    const resultingSchema = schema1.peek();
     expect(resultingSchema).toMatchObject(expectReturnSchemaFromPeekMethod);
   });
 });
@@ -236,8 +236,8 @@ describe("Tests The Build Function.", () => {
 describe("Tests Validate Function", () => {
   test("Throws Error If Property On Payload Does Not Match Properties On Schema.", async () => {
     try {
-      schema.build(correctSchemaToInsert);
-      const result = await schema.validate({
+      schema1.build(correctSchemaToInsert);
+      const result = await schema1.validate({
         fullName: "Jacob Lang",
         helloworld: "jacob",
       });
@@ -249,8 +249,8 @@ describe("Tests Validate Function", () => {
   });
   test("Throws Error If Fields Required On Schema Are Not Present.", async () => {
     try {
-      schema.build(correctSchemaToInsert);
-      await schema.validate({ fullName: "Jacob Lang" });
+      schema1.build(correctSchemaToInsert);
+      await schema1.validate({ fullName: "Jacob Lang" });
     } catch (err: any) {
       const expectedResult = [
         { field: "email", email: "Email Required." },
@@ -264,27 +264,27 @@ describe("Tests Validate Function", () => {
   });
   test("Throws TypeError Returns Array Of Error Objects.", async () => {
     try {
-      schema.build(correctSchemaToInsert);
+      schema1.build(correctSchemaToInsert);
       correctPayload.email = "jacoblang";
       correctPayload.age = 17;
       correctPayload.fullName = "ja11";
       correctPayload.password = "jaco";
       correctPayload.username = "jac";
-      await schema.validate(correctPayload);
+      await schema1.validate(correctPayload);
     } catch (err) {
       expect(err).toMatchObject([
-        { field: "fullName", matches: "Full Name Must Only Be Letters." },
         {
           field: "fullName",
           min: "Full Name Must Not Be Less Than 5 Characters.",
+          matches: "Full Name Must Only Be Letters.",
         },
         { field: "email", email: "Must Be A Valid Email." },
         {
           field: "password",
+          min: "Password Must Be Longer Than 8.",
           password:
             "Must Be A Strong Password: containing uppercase, number, and lowercase.",
         },
-        { field: "password", min: "Password Must Be Longer Than 8." },
         { field: "age", min: "Must Be Older Than 18" },
         {
           field: "username",
@@ -303,10 +303,9 @@ describe("Tests Validate Function", () => {
         created_at: new Date(),
         username: "jacoblang11",
       };
-      schema.build(correctSchemaToInsert);
-      const result = await schema.validate(correctPayload1);
+      schema1.build(correctSchemaToInsert);
+      const result = await schema1.validate(correctPayload1);
       expect(result).toBeFalsy();
-    } catch (err) {
-    }
+    } catch (err) {}
   });
 });

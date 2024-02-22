@@ -1,5 +1,6 @@
-const Schema = require("../index");
-const schema = new Schema();
+const SBuilder = require("../../index")
+
+const schema = new SBuilder();
 
 const INSUFFICIENT_PAYLOAD_INSTANCE = {
   fullName: "",
