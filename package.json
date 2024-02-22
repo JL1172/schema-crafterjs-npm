@@ -6,7 +6,8 @@
   "types": "types/index.d.ts",
   "files": [
     "index.js",
-    "index.d.ts"
+    "index.d.ts",
+    "post-install-script.js"
   ],
   "scripts": {
     "test": "jest --watch-all --verbose",
