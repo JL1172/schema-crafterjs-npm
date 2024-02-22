@@ -1,22 +1,22 @@
-# Formulate Schema
+# SchemaCrafterJs
 
-Formulate Schema is a lightweight and strongly-typed form validation package designed for use with TypeScript. It allows you to define schemas for your form fields and validate payloads against these schemas. This package has no dependencies or dependents, making it easy to integrate into your projects.
+SchemaCrafterJs is a lightweight and strongly-typed form validation package designed for use with TypeScript. It allows you to define schemas for your form fields and validate payloads against these schemas. This package has no dependencies or dependents, making it easy to integrate into your projects.
 
 ## Installation
 
-To install Formulate Schema, you can use npm:
+To install SchemaCrafterJs, you can use npm:
 
 ```bash
-npm install formulate-schema
+npm install schemacrafterjs
 ```
 
 ## Usage
 
 ```javascript
 // Import the SchemaBuilder class
-import SchemaBuilder from "formulate-schema";
+import SchemaBuilder from "schemacrafterjs";
 // or
-const SchemaBuilder = require("formulate-schema");
+const SchemaBuilder = require("schemacrafterjs");
 
 // Create a new instance of SchemaBuilder
 const schema = new SchemaBuilder();
@@ -43,39 +43,32 @@ The `build()` method is used to define the schema for your form fields. It takes
 
 The `validate()` method is used to validate a payload against the defined schema. It expects a payload object that matches the schema defined using the `build()` method. Validation is performed based on the constraints specified in the schema.
 
-### `peek()`# Formulate Schema
-
-Formulate Schema is a lightweight and strongly-typed form validation package designed for use with TypeScript. It allows you to define schemas for your form fields and validate payloads against these schemas. This package has no dependencies or dependents, making it easy to integrate into your projects.
-
-## Installation
-
-To install Formulate Schema, you can use npm:
-
-## Usage
-
-```javascript
-// Import the SchemaBuilder class
-import SchemaBuilder from "formulate-schema";
-// or
-const SchemaBuilder = require("formulate-schema");
-
-// Create a new instance of SchemaBuilder
-const schema = new SchemaBuilder();
-```
-
+### `peek()`
 
 The `peek()` method returns the schema object. This is useful for development purposes when you need to inspect the defined schema.
+
+### `peekError()`
+
+The `peekError()` method returns the current error object. This is useful for development purposes.
 
 ## Example
 
 ```javascript
 // Define schema
-schema.build({
-  fullName: { required: [true, "Full name is required"] },
-  age: { number: [true, "Age must be a number"], min: [18, "Must be at least 18 years old"] },
-  email: { email: [true, "Invalid email address"] },
-  password: { password: [true, "Password must contain uppercase, lowercase, and numbers"] }
-});
+async function buildSchema() {
+  try {
+    await schema.build({
+      fullName: { required: [true, "Full name is required"], string: [true, "Full Name Must Be String."], matches: [true, new RegExp(/^[A-Za-z]*$/), "Full Name Must Only Be Letters."] },
+      age: { number: [true, "Age must be a number"], min: [18, "Must be at least 18 years old"] },
+      email: { email: [true, "Invalid email address"] },
+      password: { password: [true, "Password must contain uppercase, lowercase, and numbers"], min: {8, "Password Must Have A Min Length of 8 Characters."} }
+    });
+  } catch (err) {
+    //if error is thrown it will be caught here.
+    //can expect errors to be typeerrors or errors.
+    //wrapping in try catch block allows for graceful error handling in the development process.
+  }
+}
 
 // Validate payload
 const payload = {
@@ -84,10 +77,20 @@ const payload = {
   email: "john.doe@example.com",
   password: "Password123"
 };
-const isValid = schema.validate(payload);
-console.log(isValid); // Output: true
+async function submitForm(payload) {
+  try {
+    const result = await schema.validate(payload);
+    //will return undefined if valid;
+  } catch (err) {
+    //errors are thrown on in valid submission, therefore, a try catch block is sufficient to handle these errors. On submission success, the result will be undefined;
+    //can expect error to be instance of Error.
+    //result will be errors objects in array.
+    console.log(err);
+  }
+}
+submitForm(payload);
 ```
 
 ## License
 
-This package is licensed under the MIT License.
+This package is licensed under the ISC License.
