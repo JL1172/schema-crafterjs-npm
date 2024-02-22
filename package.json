@@ -4,11 +4,6 @@
   "main": "index.js",
   "type": "commonjs",
   "types": "types/index.d.ts",
-  "files": [
-    "index.js",
-    "index.d.ts",
-    "post-install-script.js"
-  ],
   "scripts": {
     "test": "jest --watch-all --verbose",
     "postinstall": "node post-install-script.js"
