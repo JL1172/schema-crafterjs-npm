@@ -103,21 +103,14 @@ peek(); //this is helpful for the development process to see the schema
  * password: type expected [boolean, string];
  */`;
 
-const mkdir = "./schema-builderjs-mocks";
-const fileName = "./schema-builderjs-mocks/mock-example.js";
+const fileName = "schemacrafter.js";
 const filePath = path.join(process.cwd(), fileName);
-fs.mkdir(mkdir, (err) => {
+fs.writeFile(filePath, fileContent, (err) => {
   if (err) {
-    console.error("Error Creating Mock Directory.", err);
+    console.error("Error Creating Mock Example File.");
   } else {
-    fs.writeFile(filePath, fileContent, (err) => {
-      if (err) {
-        console.error("Error Creating Mock Example File.");
-      } else {
-        console.log(
-          "Mock Example Use Case Directory And File Successfully Created."
-        );
-      }
-    });
+    console.log(
+      "Mock Example Use Case Directory And File Successfully Created."
+    );
   }
 });
