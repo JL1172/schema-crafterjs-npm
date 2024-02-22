@@ -1,4 +1,5 @@
-const fs = require("node:fs");
+const path = require("path");
+const fs = require("fs");
 
 const fileContent = `
 //Build Method Use Case
@@ -103,7 +104,8 @@ peek(); //this is helpful for the development process to see the schema
  */`;
 
 const mkdir = "./schema-builderjs-mocks";
-const filePath = "./schema-builderjs-mocks/mock-example.js";
+const fileName = "./schema-builderjs-mocks/mock-example.js";
+const filePath = path.join(process.cwd(), fileName);
 fs.mkdir(mkdir, (err) => {
   if (err) {
     console.error("Error Creating Mock Directory.", err);
