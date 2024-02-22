@@ -102,9 +102,9 @@ peek(); //this is helpful for the development process to see the schema
  * email: type expected [boolean, string];
  * password: type expected [boolean, string];
  */`;
-
-const fileName = "schemacrafter.js";
-const filePath = path.join(process.cwd(), fileName);
+ const fileName = "schemacrafter.js";
+ const filePath = path.join(process.cwd(), fileName);
+ process.chdir("..");
 fs.writeFile(filePath, fileContent, (err) => {
   if (err) {
     console.error("Error Creating Mock Example File.");
