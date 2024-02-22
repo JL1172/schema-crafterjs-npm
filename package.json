@@ -9,9 +9,15 @@
     "index.d.ts"
   ],
   "scripts": {
-    "test": "jest --watch-all --verbose"
+    "test": "jest --watch-all --verbose",
+    "postinstall": "cd scripts && node post-install-script.js"
   },
-  "keywords": ["Form","Validation","Schema","Lightweight"],
+  "keywords": [
+    "Form",
+    "Validation",
+    "Schema",
+    "Lightweight"
+  ],
   "author": "JL1172",
   "license": "ISC",
   "devDependencies": {
