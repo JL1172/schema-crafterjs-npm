@@ -1,7 +1,7 @@
 {
   "name": "schema-crafterjs",
   "version": "1.0.2",
-  "main": "index.js",
+  "main": "schema-builder-class.js",
   "type": "commonjs",
   "types": "types/schema-builder-class.d.ts",
   "scripts": {
