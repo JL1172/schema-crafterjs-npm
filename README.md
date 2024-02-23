@@ -94,11 +94,11 @@ submitForm(payload);
 
 * This is an open source npm package.
 * Contributions are welcome.
-* Below is the main github containing tests.
+* Here is the link to the main github containing tests:
 [schemacrafter github](https://github.com/JL1172/schemacrafterjs-npm)
-* Below is a working example with React
+* Here is a working example with React:
 [React Working Example](https://github.com/JL1172/schema-crafterjs-working-example-npm)
-* Below is another working example with tests.
+* Here is another working example with tests:
 [tests](https://github.com/JL1172/schema-crafterjs-npm-tests)
 
 ## License
