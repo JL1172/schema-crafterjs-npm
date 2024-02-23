@@ -6,7 +6,7 @@ const custom_command_setter_script_1 = require("./custom-command-setter-script")
 async function package_builder() {
     try {
         console.log("This Is A Post-Installation Question.\n");
-        const result = readline.keyInYN("\nDo You Want To Generate A Mock File Showing An Example Of How To Use This Package?\n");
+        const result = readline.keyInYNStrict("\nDo You Want To Generate A Mock File Showing An Example Of How To Use This Package?\n");
         if (!result) {
             console.log("Note, If You Want To Add This Option Later, Run `npm run mock-build`");
         }
