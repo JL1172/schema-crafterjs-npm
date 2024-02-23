@@ -1,4 +1,4 @@
-const SBuilder = require("../../index")
+const SBuilder = require("../schema-builder-class/schema-builder-class");
 
 const schema = new SBuilder();
 
@@ -371,7 +371,7 @@ describe("Runs Every Edge Case And Ensures The Data Pipeline Does Not Get Clogge
         {
           field: "fullName",
           min: "Full Name Must Not Be Less Than 5 Characters.",
-          fullName: "Full Name Required.",
+          required: "Full Name Required.",
         },
         { field: "email", email: "Must Be A Valid Email." },
         {
@@ -384,19 +384,19 @@ describe("Runs Every Edge Case And Ensures The Data Pipeline Does Not Get Clogge
           field: "age",
           min: "Must Be Older Than 18",
           number: "Age Must Be A Number.",
-          age: "Age Required.",
+          required: "Age Required.",
         },
         {
           field: "created_at",
           date: "Must Be A Valid Date.",
-          created_at: "Timestamp Required",
+          required: "Timestamp Required",
         },
         {
           field: "username",
           min: "Username Must Be Longer Than 5 Characters.",
           matches:
             "Username Must Contain A Number, A Lowercase, and Uppercase Letter.",
-          username: "Username Required.",
+          required: "Username Required.",
         },
       ]);
     }
@@ -418,13 +418,13 @@ describe("Runs Every Edge Case And Ensures The Data Pipeline Does Not Get Clogge
         {
           field: "fullName",
           min: "Full Name Must Not Be Less Than 5 Characters.",
-          fullName: "Full Name Required.",
+          required: "Full Name Required.",
         },
-        { field: "email", email: "Email Required." },
-        { field: "password", password: "Password Required." },
-        { field: "age", age: "Age Required." },
-        { field: "created_at", created_at: "Timestamp Required" },
-        { field: "username", username: "Username Required." },
+        { field: "email", required: "Email Required." },
+        { field: "password", required: "Password Required." },
+        { field: "age", required: "Age Required." },
+        { field: "created_at", required: "Timestamp Required" },
+        { field: "username", required: "Username Required." },
       ]);
     }
   });

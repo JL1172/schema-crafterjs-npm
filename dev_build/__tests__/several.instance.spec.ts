@@ -1,4 +1,4 @@
-const SBuilderInstance2 = require("../../index");
+const SBuilderInstance2 = require("../schema-builder-class/schema-builder-class");
 
 let schema1: any;
 beforeEach(() => {
@@ -253,11 +253,11 @@ describe("Tests Validate Function", () => {
       await schema1.validate({ fullName: "Jacob Lang" });
     } catch (err: any) {
       const expectedResult = [
-        { field: "email", email: "Email Required." },
-        { field: "password", password: "Password Required." },
-        { field: "age", age: "Age Required." },
-        { field: "created_at", created_at: "Timestamp Required" },
-        { field: "username", username: "Username Required." },
+        { field: "email", required: "Email Required." },
+        { field: "password", required: "Password Required." },
+        { field: "age", required: "Age Required." },
+        { field: "created_at", required: "Timestamp Required" },
+        { field: "username", required: "Username Required." },
       ];
       expect(err).toMatchObject(expectedResult);
     }

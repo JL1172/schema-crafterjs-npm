@@ -1,13 +1,13 @@
 /*
  * Copyright (c) [2024] [Jacob Lang]
  * SPDX-License-Identifier: ISC
-*/
+ */
 
 //this interface is for establishing the schema on the schema.build method
 //these types allow the handling of a boolean or number or regexp and then the string, this is for the error message
 
 //this is for documentation, this is the current development file
-/*
+
 type ArrayBooleanType = [boolean, string];
 type ArrayNumberType = [number, string];
 type ArrayRegExpType = [boolean, RegExp, string];
@@ -513,10 +513,13 @@ class SchemaBuilder {
         const message = this.schema[s].required?.[1];
         if (
           !user_input.hasOwnProperty(s) ||
-          (user_input.hasOwnProperty(s) && !user_input[s])
+          (user_input.hasOwnProperty(s) &&
+            (!user_input[s] ||
+              (typeof user_input[s] === "string" &&
+                String(user_input[s]).trim().length === 0)))
         ) {
           const errorToInsert = this.createErrorObject(
-            s,
+            "required",
             s,
             message ? message : `${s} Field Is Required.`
           );
@@ -552,4 +555,3 @@ class SchemaBuilder {
   }
 }
 module.exports = SchemaBuilder;
-*/
