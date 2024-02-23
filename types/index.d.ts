@@ -58,5 +58,5 @@ declare class SchemaBuilder {
     peek(): Record<string, FieldOptions | OptionsType>;
     peekError(): ErrorType[];
 }
-declare module "schemacrafterjs";
+declare module "schema-crafterjs";
 //# sourceMappingURL=index.d.ts.map
