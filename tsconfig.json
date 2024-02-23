@@ -21,5 +21,6 @@
     "noFallthroughCasesInSwitch": false,
     "moduleResolution": "Node",
   },
-  "exclude": ["node_modules", "**/*.spec.ts","jest.config.ts","tsconfig.json","index.js","tsconfig.json"]
+  "include": ["types/*", "types/index.ts"],
+  "exclude": ["node_modules","jest.config.ts","tsconfig.json","tsconfig.json","dev_build","scripts"]
 }

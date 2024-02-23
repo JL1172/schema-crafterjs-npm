@@ -1,5 +1,7 @@
 //this interface is for establishing the schema on the schema.build method
 //these types allow the handling of a boolean or number or regexp and then the string, this is for the error message
+
+//this is for documentation, this is the current development file
 /*
 type ArrayBooleanType = [boolean, string];
 type ArrayNumberType = [number, string];
