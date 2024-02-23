@@ -1,4 +1,4 @@
-const SBuilderInstance2 = require("../schema-builder-class/schema-builder-class");
+const SBuilderInstance2 = require("../../schema-builder-class");
 
 let schema1: any;
 beforeEach(() => {

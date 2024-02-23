@@ -1,4 +1,4 @@
-const SCrafter = require("../schema-builder-class/schema-builder-class");
+const SCrafter = require("../../schema-builder-class");
 
 const correctSchemaToInsertOne = {
   fullName: {

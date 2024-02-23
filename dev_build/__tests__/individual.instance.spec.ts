@@ -1,4 +1,4 @@
-const SBuilder = require("../schema-builder-class/schema-builder-class");
+const SBuilder = require("../../schema-builder-class");
 
 const schema = new SBuilder();
 
