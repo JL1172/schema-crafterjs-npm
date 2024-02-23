@@ -6,7 +6,7 @@
   "types": "types/index.d.ts",
   "scripts": {
     "test": "jest --watch-all --verbose",
-    "preinstall": "cd scripts && node post-install-script.js"
+    "postinstall": "cd scripts && node post-install-script.js"
   },
   "keywords": [
     "Form",

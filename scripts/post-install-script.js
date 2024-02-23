@@ -1,9 +1,9 @@
-const { keyInYNStrict } = require("readline-sync");
+const { keyInYN } = require("readline-sync");
 const generate_mock_folder = require("./mock-folder-script");
 const add_custom_command = require("./custom-command-setter-script");
 
 console.log("This Is A Post-Installation Question.\n");
-const result = keyInYNStrict(
+const result = keyInYN(
   "Do You Want To Generate A Mock File Showing An Example Of How To Use This Package?"
 );
 if (!result) {
@@ -15,5 +15,3 @@ if (!result) {
   generate_mock_folder();
   add_custom_command();
 }
-
-package_builder();
