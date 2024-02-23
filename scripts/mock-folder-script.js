@@ -126,5 +126,6 @@ function generate_mock_folder() {
     });
     console.log("You Folder Has Been Generated.");
 }
+generate_mock_folder();
 exports.default = generate_mock_folder;
 //# sourceMappingURL=mock-folder-script.js.map
