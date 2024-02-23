@@ -7,16 +7,16 @@ SchemaCrafterJs is a lightweight and strongly-typed form validation package desi
 To install SchemaCrafterJs, you can use npm:
 
 ```bash
-npm install schemacrafterjs
+npm install schema-crafterjs
 ```
 
 ## Usage
 
 ```javascript
 // Import the SchemaBuilder class
-import SchemaBuilder from "schemacrafterjs";
+import SchemaBuilder from "schema-crafterjs";
 // or
-const SchemaBuilder = require("schemacrafterjs");
+const SchemaBuilder = require("schema-crafterjs");
 
 // Create a new instance of SchemaBuilder
 const schema = new SchemaBuilder();
@@ -94,8 +94,12 @@ submitForm(payload);
 
 * This is an open source npm package.
 * Contributions are welcome.
-* Below is the github.
+* Below is the main github containing tests.
 [schemacrafter github](https://github.com/JL1172/schemacrafterjs-npm)
+* Below is a working example with React
+[React Working Example](https://github.com/JL1172/schema-crafterjs-working-example-npm)
+* Below is another working example with tests.
+[tests](https://github.com/JL1172/schema-crafterjs-npm-tests)
 
 ## License
 
