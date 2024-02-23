@@ -10,7 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
-    "outDir": "./",
+    "outDir": "./types",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
@@ -21,6 +21,6 @@
     "noFallthroughCasesInSwitch": false,
     "moduleResolution": "Node",
   },
-  "include": ["types/*", "types/index.ts"],
+  "include": ["types/*", "schema-builder-class.js"],
   "exclude": ["node_modules","jest.config.ts","tsconfig.json","tsconfig.json","dev_build","scripts"]
 }
