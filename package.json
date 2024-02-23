@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "main": "index.js",
   "type": "commonjs",
-  "types": "types/index.d.ts",
+  "types": "types/schema-builder-class.d.ts",
   "scripts": {
     "test": "jest --watch-all --verbose",
     "postinstall": "cd scripts && node post-install-script.js"
