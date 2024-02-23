@@ -1,6 +1,6 @@
 {
   "name": "schemacrafterjs",
-  "version": "1.9.1",
+  "version": "1.0.0",
   "main": "index.js",
   "type": "commonjs",
   "types": "types/index.d.ts",
