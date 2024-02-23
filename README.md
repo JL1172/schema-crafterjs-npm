@@ -90,6 +90,12 @@ async function submitForm(payload) {
 }
 submitForm(payload);
 ```
+## Contributions 
+
+* This is an open source npm package.
+* Contributions are welcome.
+* Below is the github.
+[schemacrafter github](https://github.com/JL1172/schemacrafterjs-npm)
 
 ## License
 

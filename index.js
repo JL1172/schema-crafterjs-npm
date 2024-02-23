@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) [2024] [Jacob Lang]
+ * SPDX-License-Identifier: ISC
+*/
 "use strict";
 class SchemaBuilder {
     constructor() {

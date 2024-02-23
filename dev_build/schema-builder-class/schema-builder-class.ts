@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) [2024] [Jacob Lang]
+ * SPDX-License-Identifier: ISC
+*/
+
 //this interface is for establishing the schema on the schema.build method
 //these types allow the handling of a boolean or number or regexp and then the string, this is for the error message
 
