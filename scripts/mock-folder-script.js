@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
 function generate_mock_folder() {
-    const fileContent = `
+  const fileContent = `
   //Build Method Use Case
   //you can pre-define schema like so:
 
@@ -105,27 +103,26 @@ function generate_mock_folder() {
    * password: type expected [boolean, string];
    */
 `;
-    const fileName = "schemacrafter.js";
-    process.chdir("../../..");
-    const filePath = path.join(process.cwd(), "Schema-CrafterJS/" + fileName);
-    const dirPath = path.join(process.cwd(), "Schema-CrafterJS");
-    fs.mkdir(dirPath, (err) => {
+  const fileName = "schemacrafter.js";
+  process.chdir("../../..");
+  const filePath = path.join(process.cwd(), "Schema-CrafterJS/" + fileName);
+  const dirPath = path.join(process.cwd(), "Schema-CrafterJS");
+  fs.mkdir(dirPath, (err) => {
+    if (err) {
+      console.error("There Was An Error Creating The Directory:", err);
+    } else {
+      fs.writeFile(filePath, fileContent, (err) => {
         if (err) {
-            console.error("There Was An Error Creating The Directory:", err);
+          console.error("Error Creating Mock Example File.");
+        } else {
+          console.log(
+            `Mock Example Of This Package In Use Added To Directory: \n${dirPath}\n And File: \n${filePath}\n Successfully Created.`
+          );
         }
-        else {
-            fs.writeFile(filePath, fileContent, (err) => {
-                if (err) {
-                    console.error("Error Creating Mock Example File.");
-                }
-                else {
-                    console.log(`Mock Example Of This Package In Use Added To Directory: \n${dirPath}\n And File: \n${filePath}\n Successfully Created.`);
-                }
-            });
-        }
-    });
-    console.log("You Folder Has Been Generated.");
+      });
+    }
+  });
+  console.log("You Folder Has Been Generated.");
 }
-generate_mock_folder();
-exports.default = generate_mock_folder;
-//# sourceMappingURL=mock-folder-script.js.map
+
+module.exports = generate_mock_folder;

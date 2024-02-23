@@ -1,12 +1,12 @@
 {
   "name": "schemacrafterjs",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "main": "index.js",
   "type": "commonjs",
   "types": "types/index.d.ts",
   "scripts": {
     "test": "jest --watch-all --verbose",
-    "postinstall": "cd scripts && node post-install-script.js"
+    "script": "cd scripts && node post-install-script.js"
   },
   "keywords": [
     "Form",
