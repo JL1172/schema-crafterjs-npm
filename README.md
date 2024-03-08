@@ -1,6 +1,6 @@
 # SchemaCrafterJs
 
-SchemaCrafterJs is a lightweight and strongly-typed form validation package designed for use with TypeScript. It allows you to define schemas for your form fields and validate payloads against these schemas. This package has no dependencies or dependents, making it easy to integrate into your projects.
+SchemaCrafterJs is a lightweight and strongly-typed form validation package designed for use with TypeScript. It allows you to define schemas for your form fields and validate payloads against these schemas. This package has one dependency and no dependents, making it easy to integrate into your projects.
 
 ## Installation
 
