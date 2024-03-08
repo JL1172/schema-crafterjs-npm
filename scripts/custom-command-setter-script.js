@@ -7,4 +7,5 @@ function add_custom_command() {
     "cd node_modules/schema-crafterjs/scripts && node generate-folder-script.js";
   fs.writeFileSync(jsonPath, JSON.stringify(packageJson, null, 2));
 }
+add_custom_command();
 module.exports = add_custom_command;
